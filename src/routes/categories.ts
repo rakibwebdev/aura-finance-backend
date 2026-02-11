@@ -39,9 +39,19 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // Create new category
+
 router.post("/", async (req: Request, res: Response) => {
     try {
         const { name, icon, color, budgetLimit, userId } = req.body;
+
+        // Validate required fields
+        if (!name) {
+            return res.status(400).json({ error: "Category name is required" });
+        }
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
 
         // Check if category already exists for this user
         const existingCategory = await Category.findOne({
@@ -66,18 +76,31 @@ router.post("/", async (req: Request, res: Response) => {
         await category.save();
         res.status(201).json(category);
     } catch (error) {
-        res.status(400).json({ error: "Failed to create category" });
+        console.error("Error creating category:", error);
+
+        if (error instanceof Error) {
+            res.status(400).json({ error: error.message });
+        } else {
+            res.status(400).json({ error: "Failed to create category" });
+        }
     }
 });
 
 // Update category
 router.put("/:id", async (req: Request, res: Response) => {
     try {
-        const { name, icon, color, budgetLimit } = req.body;
+        const { name, icon, color, budgetLimit, spent } = req.body;
+
+        const updateData: any = {};
+        if (name !== undefined) updateData.name = name;
+        if (icon !== undefined) updateData.icon = icon;
+        if (color !== undefined) updateData.color = color;
+        if (budgetLimit !== undefined) updateData.budgetLimit = budgetLimit;
+        if (spent !== undefined) updateData.spent = spent;
 
         const category = await Category.findByIdAndUpdate(
             req.params.id,
-            { name, icon, color, budgetLimit },
+            updateData,
             { new: true },
         );
 

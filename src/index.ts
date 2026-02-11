@@ -5,14 +5,30 @@ import mongoose from "mongoose";
 import transactionRoutes from "./routes/transactions";
 import categoryRoutes from "./routes/categories";
 import userRoutes from "./routes/users";
+import productRoutes from "./routes/products";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://localhost:8100",
+            "http://127.0.0.1:5173", // <--- Fixes Vite IP issues
+            "http://127.0.0.1:8100", // <--- Fixes Ionic IP issues
+            "capacitor://localhost", // <--- Fixes iOS Native
+            "http://localhost", // <--- Fixes Android Native
+        ],
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,6 +52,7 @@ app.get("/api/health", (req: Request, res: Response) => {
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 // MongoDB Connection
 const connectDB = async () => {

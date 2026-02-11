@@ -57,6 +57,31 @@ router.post("/", async (req: Request, res: Response) => {
     }
 });
 
+// Login User
+router.post("/login", async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+        // In production, compare hashed password with bcrypt
+        if (user.password !== password) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        const userResponse = user.toObject();
+        const { password: _, ...userWithoutPassword } = userResponse;
+        res.json(userWithoutPassword);
+    } catch (error) {
+        res.status(500).json({
+            error: error instanceof Error ? "ddd" : `${error}`,
+            message: req.body,
+        });
+    }
+});
+
 // Update user
 router.put("/:id", async (req: Request, res: Response) => {
     try {
