@@ -23,6 +23,7 @@ app.use(
             "http://127.0.0.1:8100", // <--- Fixes Ionic IP issues
             "capacitor://localhost", // <--- Fixes iOS Native
             "http://localhost", // <--- Fixes Android Native
+            "https://aura-finance-app.vercel.app", // <--- Production URL
         ],
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
