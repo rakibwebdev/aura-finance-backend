@@ -6,6 +6,7 @@ import transactionRoutes from "./routes/transactions";
 import categoryRoutes from "./routes/categories";
 import userRoutes from "./routes/users";
 import productRoutes from "./routes/products";
+import stockRoutes from "./routes/stock";
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/stock", stockRoutes);
 
 // MongoDB Connection
 const connectDB = async () => {
