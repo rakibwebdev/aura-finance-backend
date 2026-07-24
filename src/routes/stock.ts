@@ -47,7 +47,7 @@ const handleStockQuote = async (req: Request, res: Response) => {
         }
 
         const quote = await new Promise<FinnhubQuote>((resolve, reject) => {
-            client.quote(symbol, (error, data) => {
+            client.quote(symbol, (error: any, data: any) => {
                 if (error) {
                     reject(error);
                     return;
